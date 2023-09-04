@@ -1,6 +1,6 @@
 const express =  require('express')
 const {
-    getCourses, 
+    getAllCourses, 
     createNewCourse,
     deleteCourse,
     updateCourse
@@ -8,12 +8,12 @@ const {
  
 const router = express.Router()
 
-router.get('/', getCourses)
+router.get('/', getAllCourses)
 
 router.post('/', createNewCourse)
 
-router.delete('/:id', deleteCourse)
+router.delete('/:courseId', deleteCourse)
 
-router.patch('/:id', updateCourse)
+router.patch('/:courseId', updateCourse)
 
 module.exports = router

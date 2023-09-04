@@ -17,15 +17,15 @@ router.get('/', getStudents)
 router.get('/filter', filterStudentClass)
 
 // GET a single  stundent
-router.get('/:id' , getStudent)
+router.get('/:studentId' , getStudent)
 
-// POST a new  stundent
+// POST a new stundent
 router.post('/', createNewStudent)
 
 // DELETE a new  stundent
-router.delete('/:id', deleteStudent)
+router.delete('/:studentId', deleteStudent)
 
 // UPDATE a new  stundent
-router.patch('/:id', updateStudent)
+router.put('/:studentId', updateStudent)
 
 module.exports = router

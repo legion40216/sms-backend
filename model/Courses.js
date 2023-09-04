@@ -4,9 +4,10 @@ const Schema = mongoose.Schema
 
 const courseSchema = new Schema({
     
-    course: {
+    courseName: {
         type: String, 
         required: true,
+        unique: true
       }
 
 }, {timestamps:true})

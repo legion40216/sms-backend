@@ -13,7 +13,7 @@ const attendanceSchema = new Schema({
         type: Date,
         required: true,
       },
-      classtitle: {
+      classroom: {
         type: mongoose.Schema.Types.ObjectId,
         ref : 'Classroom',
         required: true,

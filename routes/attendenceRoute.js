@@ -15,13 +15,13 @@ router.get('/', getAllAttendence)
 // NEW Check attendance records based on a specific date
 router.get('/check', checkAttendenceDate)
 
-// GET a single  stundent
-router.get('/:id' , getStudentAttendence)
+// POST mark attendance for a specific date
+router.post('/mark', createNewAttendence)
 
-// POST a new  stundent
-router.post('/', createNewAttendence)
+// GET a single attendance stundent
+router.get('/:attendanceId' , getStudentAttendence)
 
-// DELETE a new  stundent
-router.delete('/:id', deleteAttendance)
+// DELETE a new attendance
+router.delete('/:attendanceId', deleteAttendance)
 
 module.exports = router

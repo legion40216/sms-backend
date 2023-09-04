@@ -7,8 +7,9 @@ const classroomSchema = new Schema({
   classtitle: {
     type: String,
     required: true,
+    unique: true
   },
-  courseids: [{
+  courses: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Course', // Reference to the Course model
   }],

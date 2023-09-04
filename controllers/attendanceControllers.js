@@ -4,8 +4,7 @@ const mongoose = require('mongoose')
 //GET all attendance records for a specific date or date range
 const getAllAttendence =  async (req, res) => {
     try {
-      const { startDate, endDate, courseId,classtitleId } = req.query;
-      console.log(startDate, endDate,courseId,classtitleId )
+      const { startDate, endDate, course, classroom, serachText } = req.query;
       const filter = {}
       if(startDate && endDate)
       {
@@ -14,18 +13,25 @@ const getAllAttendence =  async (req, res) => {
           $lte: new Date(endDate),
         }
       }
-      if (courseId) {
-        filter.course = courseId;
+      if (course) {
+        filter.course = course;
       }
-      if (classtitleId) {
-        filter.classtitle = classtitleId;
+      if (classroom) {
+        filter.classroom = classroom;
       }
-      
+      if (serachText) {
+        filter.student = serachText;
+      }
+     
       const attendanceRecords = await Attendance.find(filter)
-      .populate('course', 'course').populate('classtitle', 'classtitle')
+      .populate('course', 'courseName').populate('classroom', 'classtitle')
       .populate('student', 'name')
    
-      res.json(attendanceRecords);
+      if (!attendanceRecords.length > 0) {
+        return res.status(404).json({ error: 'Attendence does not exist' });
+      }
+      res.status(200).json(attendanceRecords)
+
     } catch (error) {
       console.error('Error fetching attendance records:', error);
       res.status(500).json({ error: 'Failed to fetch attendance records' });
@@ -35,13 +41,17 @@ const getAllAttendence =  async (req, res) => {
   const checkAttendenceDate =  async (req, res) => {
     try {
   // Implement logic to check attendance records based on date,class,subject
-  const { date,classtitle,courseId } = req.query; 
+  const { date, classroom, course } = req.query; 
  
   const existingAttendanceRecords = await Attendance.find({ 
-    date: new Date(date),classtitle,course:courseId 
+    date: new Date(date), classroom, course
   });
+
   // Determine if attendance records exist for the date
   const attendanceExist = existingAttendanceRecords.length > 0;
+  if (attendanceExist) {
+    return res.status(404).json({ error: 'Attendence Already Exist On This date' });
+  }
 
   // Respond with the result
   res.status(200).json(attendanceExist)
@@ -52,6 +62,22 @@ const getAllAttendence =  async (req, res) => {
     }
   };
 
+  
+// POST mark attendance for a specific date
+const createNewAttendence = async (req, res) => {
+  try {
+    // Parse the incoming JSON data (array of attendance records)
+    const attendanceRecords = req.body;
+  
+    // Use insertMany to insert all attendance records into the database
+    const attendance = await Attendance.insertMany(attendanceRecords);
+    res.status(200).json(attendance)
+    } catch (error) {
+      console.error('Error marking attendance:', error);
+      res.status(500).json({ error: 'Failed to mark attendance' });
+    }
+  };
+  
 // GET attendance records for a specific student
 const getStudentAttendence = async (req, res) => {
     try {
@@ -64,24 +90,6 @@ const getStudentAttendence = async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch attendance records' });
       }
 };
-
-// POST mark attendance for a specific date
-const createNewAttendence = async (req, res) => {
-try {
-  // Parse the incoming JSON data (array of attendance records)
-  const attendanceRecords = req.body;
-
-  // Use insertMany to insert all attendance records into the database
-  const attendance = await Attendance.insertMany(attendanceRecords);
-  res.status(200).json(attendance)
-  } catch (error) {
-    console.error('Error marking attendance:', error);
-    res.status(500).json({ error: 'Failed to mark attendance' });
-  }
-};
-
-
-
 
 const deleteAttendance = async (req, res) => {
     const {id} = req.params

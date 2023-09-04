@@ -7,27 +7,29 @@ const studentsSchema = new Schema({
         type: String, 
         required: true
     },
-    fname:{
+    fatherName:{
         type: String,
         required: true
     },
-    mname:{
+    motherName:{
         type: String,
         required: true
     },
-    rollno:{
+    rollNo:{
         type: Number,
-        required: true
+        required: true,
+        unique: true
     },
     email:{
         type: String,
         required: true
     },
-    classtitle:{
+    enrolledClass: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Classroom',
         required: true
     }
+ 
 
 }, {timestamps:true})
 
